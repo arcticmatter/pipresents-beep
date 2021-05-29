@@ -1,38 +1,13 @@
 PI PRESENTS  - Version 1.4.4
 ============================
 
-This repository contains the latest and greatest version Pi Presents. Use if you are happy with bleeding edge software that is under development.
+This repository contains an unofficial and independent fork of Pi Presents as found here https://github.com/KenT2/pipresents-beep/
 
-Diese Readme-Datei hat Peter Vasen ins Deutsche übersetzt. Klicken Sie hier 
-http://www.web-echo.de/4.html
+Note that the original licence still applies.
 
-VERSION 1.4.3 ONWARDS IS PYTHON 3 ONLY
+Pi Presents is a toolkit for producing interactive multimedia applications.
 
-
-TO INSTALL PIPRESENTS-BEEP
-=============================
-
-Read the 'Installing Pi Presents Beep' section below.
-
-
-
-TO UPGRADE FROM EARLIER VERSIONS OF PIPRESENTS-BEEP or PIPRESENTS-GAPLESS
-======================================================
-To upgrade follow the instructions in the 'Updating Pi Presents' section below. Then follow any instructions in the Release Notes.
-
-
-PI PRESENTS
-===========
-
-Pi Presents is a toolkit for producing interactive multimedia applications for museums, visitor centres, and more.
-
-There are a number of Digital Signage solutions for the Raspberry Pi which are generally browser based, limited to slideshows, non-interactive, and driven from a central server enabling the content to be modified frequently.
-
-Pi Presents is different, it is stand alone, multi-media, highly interactive, diverse in it set of control paradigms – slideshow, cursor controlled menu, radio button, and hyperlinked show, and able to interface with users or machines over several types of interface. It is aimed primarly at curated applications in museums, science centres, and visitor centres.
-
-Being so flexible Pi Presents needs to be configured for your application. This is achieved using a simple to use graphical editor and needs no Python programming. There are numerous tutorial examples and a comprehensive manual.
-
-There are two current versions of Pi Presents. ‘Gapless’ is the current stable version which is not being developed except for bug fixes. 'Beep' is a continuation of Gapless which is being developed to add new features.
+Pi Presents needs to be configured for your application. This is mainly achieved using a graphical editor. There are numerous tutorial examples and a comprehensive manual.
 
 For a detailed list of applications and features see here:
 
@@ -40,16 +15,10 @@ For a detailed list of applications and features see here:
 
 
 
-Licence
-=======
-
-See the licence.md file. Pi Presents is Careware to help support a small museum charity of which I am a Trustee http://www.museumoftechnology.org.uk  Particularly if you are using Pi Presents in a profit making situation a donation would be appreciated.
-
-
 Installing Pi Presents Beep
 ===============================
 
-The full manual in English is here https://github.com/KenT2/pipresents-beep/blob/master/manual.pdf. It will be downloaded with Pi Presents.
+The full manual in English is here https://github.com/arcticmatter/pipresents-beep/blob/master/manual.pdf. It will be downloaded with Pi Presents.
 
 
 Requirements
@@ -70,18 +39,14 @@ Ensure Raspbian is up to date.
 -------------------------------
 Pi Presents MUST have the latest version of omxplayer and of Raspbian, get this by
 
-         sudo apt update
-         sudo apt upgrade
+         sudo apt update && apt-get upgrade
+
 
 Install required packages 
 -----------------------------
-         sudo apt install python3-pil.imagetk
-         sudo apt install unclutter
-         sudo apt install mplayer
-         sudo apt install python3-pexpect
+         sudo apt install python3-pil.imagetk unclutter mplayer python3-pexpect chromium-chromedriver
          
          sudo pip3 install selenium
-         sudo apt install chromium-chromedriver
          sudo pip3 install python-vlc
 
 Install optional packages
@@ -96,9 +61,9 @@ Download Pi Presents Beep
 
 From a terminal window open in your home directory type:
 
-         wget https://github.com/KenT2/pipresents-beep/tarball/master -O - | tar xz     # -O is a capital Ohhh...
+         wget https://github.com/arcticmatter/pipresents-beep/tarball/master -O - | tar xz     # -O is not null...
 
-There should now be a directory 'KenT2-pipresents-beep-xxxx' in your /home/pi directory. Copy or rename the directory to pipresents
+There should now be a directory 'arcticmatter-pipresents-beep-xxxx' in your /home/pi directory. Copy or rename the directory to pipresents
 
 Run Pi Presents to check the installation is successful. From a terminal window opened in the home directory type:
 
@@ -114,9 +79,9 @@ Examples are in the github repository pipresents-beep-examples.
 
 Open a terminal window in your home directory and type:
 
-         wget https://github.com/KenT2/pipresents-beep-examples/tarball/master -O - | tar xz
+         wget https://github.com/arcticmatter/pipresents-beep-examples/tarball/master -O - | tar xz
 
-There should now be a directory 'KenT2-pipresents-beep-examples-xxxx' in the /home/pi directory. Open the directory and move the 'pp_home' directory and its contents to the /home/pi directory.
+There should now be a directory 'arcticmatter-pipresents-beep-examples-xxxx' in the /home/pi directory. Open the directory and move the 'pp_home' directory and its contents to the /home/pi directory.
 
 From the terminal window type:
 
@@ -134,36 +99,9 @@ to display full screen and to disable screen blanking
 Now read the manual to try other examples.
 
 
-Updating Pi Presents from earlier Versions of Pi Presents Beep or Pi Presents Gapless
-======================================================================================
 
-Install Python 3 version of some packages:
-
-      sudo apt-get install python3-pil.imagetk
-      sudo apt-get install python3-pexpect
-      sudo pip3 install evdev
-      sudo pip3 install python-vlc
-      
-The Python 2 versions of these packages can be left installed
-
-Open a terminal window in the /home/pi and type:
-
-         wget https://github.com/KenT2/pipresents-beep/tarball/master -O - | tar xz
-
-There should now be a directory 'KenT2-pipresents-beep-xxxx' in the /home/pi directory
-
-Rename the existing pipresents directory to old-pipresents
-
-Rename the new directory to pipresents.
-
-Copy any files you have changed from old to new /pipresents/pp_config directory.
-Copy any files you have changed from old to new /pipresents/pp_io_config directory.
-Copy any files you have changed from old to new /pipresents/pp_io_plugins directory.
-Copy any files you have used or changed from old to new /pipresents/pp_track_plugins directory. Note: in 1.4.1b track plugins have been moved to their examples
-
-
-Getting examples for this version.
-----------------------------------
+Getting examples.
+-----------------
 
 Examples are in the github repository pipresents-beep-examples.
 
@@ -171,25 +109,17 @@ Rename the existing pp_home directory to old_pp_home.
 
 Open a terminal window in your home directory and type:
 
-         wget https://github.com/KenT2/pipresents-beep-examples/tarball/master -O - | tar xz
+         wget https://github.com/arcticmatter/pipresents-beep-examples/tarball/master -O - | tar xz
 
-There should now be a directory 'KenT2-pipresents-beep-examples-xxxx' in the /home/pi directory.
+There should now be a directory 'arcticmatter-pipresents-beep-examples-xxxx' in the /home/pi directory.
 
 Open the directory and move the 'pp_home' directory and its contents to the /home/pi directory.
 
-These examples are compatible with the version of Pi Presents you have just downloaded. In addition you can update profiles from earlier 1.4.x or 1.3.x versions by simply opening them in the editor (make a backup copy first).
-
-You can use the update>update all menu option of the editor to update all profiles in a single directory at once.
-
-Lastly you will need to do some manual updating of some of the field values as specified in  ReleaseNotes.txt. Start at the paragraph in ReleaseNotes.txt that introduces your previous version and work forwards
 
 
+Licence
+=======
 
-Bug Reports and Feature Requests
-================================
-I am keen to develop Pi Presents further and would welcome bug reports and ideas for additional features and uses.
+Copyright (c) 2013, Ken Thompson. Contact for licencing: https://pipresents.wordpress.com/contact/ For technical queries please use Github or RPi Forum.
 
-Please use the Issues tab on Github https://github.com/KenT2/pipresents-beep/issues.
-
-For more information on how Pi Presents is being used, Hints and Tips on how to use it and all the latest news hop over to the Pi Presents website https://pipresents.wordpress.com/
-
+Permission to use, copy, modify, and/or distribute this software for any purpose with or without fee is hereby granted, provided that the above copyright notice and this permission notice appear in all copies.
