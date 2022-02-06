@@ -39,7 +39,7 @@ Ensure Raspbian is up to date.
 -------------------------------
 Pi Presents MUST have the latest version of omxplayer and of Raspbian, get this by
 
-         sudo apt update && apt-get upgrade
+         sudo apt update && apt upgrade
 
 
 Install required packages 
@@ -120,6 +120,6 @@ Open the directory and move the 'pp_home' directory and its contents to the /hom
 Licence
 =======
 
-Copyright (c) 2013, Ken Thompson. Contact for licencing: https://pipresents.wordpress.com/contact/ For technical queries please use Github or RPi Forum.
+Copyright (c) 2013, Ken Thompson.
 
 Permission to use, copy, modify, and/or distribute this software for any purpose with or without fee is hereby granted, provided that the above copyright notice and this permission notice appear in all copies.
