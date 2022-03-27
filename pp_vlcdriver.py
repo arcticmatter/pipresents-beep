@@ -21,7 +21,11 @@ track - path of track to play track <full track path>
 
 Initial state is idle, this is altered by the commands
 
-load - load a track and then run to start as in popts. Load is non-blocking and returns immeadiately. To determine load is complete poll using the t command to obtain the state
+load - start VLC and obtain the media. Returns when the media is obtained.
+
+get-size - optionally use this command between load and play to obtain the dimensions of the media 
+
+play - complete loading a track and then run to start as in popts. Load is non-blocking and returns immeadiately. To determine load is complete poll using the t command to obtain the state
     load-loading - load in progress
     load-ok - loading complete and ok
     load-fail
@@ -40,13 +44,16 @@ unload - stops loading. To determine if complete poll state for:
 
 close - exits vlc and exits pp_vlcdriver.py
     
-t - get the current state of loading/showing. Returns a single line wit hone of the above values
+t - get the current state of loading/showing. Returns a single line with one of the above values
 
 vol - set the volume between 0 and 100. Use only when showing  vol <volume>
       
-
+ratio - set video ratio
+crop - set video crop
+set-device - set audio device
 pause/ unpause - pauses the track
 mute/unmute - mute without changing volume
+
 """
 
 import time
@@ -67,6 +74,7 @@ class VLCDriver(object):
         self.instance_options=' --mmal-layer=1 --mmal-vout-window 400x300+100+100 --mmal-vout-transparent --aout=pulse --mmal-display=HDMI-1 '         # obtained from iopts command, just a test set
         self.player_options=''            #options for mediaplayer, none required
         self.instance_mandatory=' --quiet --no-xlib --vout mmal_vout --mmal-vout-transparent '   #mandatory set of options
+
         self.track_path= '/home/pi/pp_home/media/5sec.mp4'   #test track to play
         self.freeze_at_start='no'       #test value, normally obtained from pauseopts command
         self.freeze_at_end='yes'           #test value, normally obtained from pauseopts command
@@ -77,6 +85,8 @@ class VLCDriver(object):
         self.user_pause=False
         self.frozen_at_start=False
         self.frozen_at_end=False
+        self.player=None
+        self.vlc_instance=None
 
 
     def load(self):
@@ -149,7 +159,7 @@ class VLCDriver(object):
     def load_status_loop(self):
         # wait until the load is complete
         #need a timeout as sometimes a load will fail 
-        timeout= 500   #5 seconds
+        timeout= 500   #5 seconds released 500
 
         while True:
             if self.quit_load_signal is True:
@@ -166,6 +176,7 @@ class VLCDriver(object):
                 self.frozen_at_start=True
                 self.logger.log ('track frozen at start at: ',position,self.zero_count)
                 self.state='load-ok'
+                self.logger.log ('load-ok at: ',position)
                 return
                 
             timeout-=1
@@ -227,29 +238,32 @@ class VLCDriver(object):
             if self.length==0:
                 time.sleep(0.1)
             else:
-                position=self.player.get_time()
+                #position=self.player.get_time()
                 #self.logger.log('track time',self.freeze_at_end,self.length,position,self.player.get_state())
 
                 # when using --play-and-pause option VLC pauses on the last frame into a funny state.
                 if self.freeze_at_end == 'yes':
+                    #self.logger.log('before',self.state)
                     if self.user_pause is False and self.player.get_state() == vlc.State.Paused:
                         # in this state VLC does not respond to stop or unpause, only close
                         self.frozen_at_end=True
-                        self.logger.log ('paused at end at: ',position)
+                        #self.logger.log ('paused at end at')
                         self.state='show-pauseatend'
-                        return                   
+                        return
                     else:
-                        time.sleep(0.01)
+                        #self.logger.log('after',self.state)
+                        time.sleep(0.03)
                 else:
+                    #self.logger.log('before',self.state)
                     if self.freeze_at_end == 'no':
                         if self.player.get_state() == vlc.State.Ended:
                             self.player.stop()
-                            self.logger.log ('ended with no pause at: ',position)
-                            #nice-day
+                            self.logger.log ('ended with no pause')
                             self.state='show-niceday'
                             return
                         else:
-                            time.sleep(0.01)
+                            #self.logger.log('after',self.state)
+                            time.sleep(0.03)
                     else:
                         self.logger.log( 'illegal freeze at end')
                     
@@ -306,7 +320,7 @@ class VLCDriver(object):
     def stop(self):
         if self.frozen_at_start is True:
             self.player.stop()
-            self.state='show-niceday'
+            self.state='stop-frozen'
             self.logger.log('stop during frozen at start',self.state)
             return
         else:
@@ -314,12 +328,17 @@ class VLCDriver(object):
             return
 
     def close(self):
+        self.player.stop()
         if self.load_status_thread != None:
             self.load_status_thread.join()
         if self.show_status_thread != None:
             self.show_status_thread.join()
-        self.player=None
-        self.vlc_instance=None        
+        if self.player != None:
+            self.player.release()
+            self.player=None
+        if self.vlc_instance !=None:
+            self.vlc_instance.release()
+            self.vlc_instance=None        
         
     def unload(self):
         if self.state=='load-loading':
@@ -337,7 +356,10 @@ class VLCDriver(object):
         self.player.audio_set_volume(volume)        
 
     def set_device(self,device_id):
-        self.player.audio_output_device_set(None,device_id)
+        if device_id=='':
+            self.player.audio_output_device_set(None,None) 
+        else:           
+            self.player.audio_output_device_set(None,device_id)
         
 class  Logger(object): 
 
@@ -464,11 +486,3 @@ class CLI(object):
 if __name__ == '__main__':    
     cc=CLI()
     cc.cli_loop()
-
-
-
-  
-    
-
-    
-

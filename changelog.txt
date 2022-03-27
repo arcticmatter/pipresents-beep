@@ -1,735 +1,480 @@
-CHANGES FOR 1.4.5b 13/3/2021
-============================
-enhanced - VLC Video Track audio device can now be selected from a profile
+Version 1.4.6c  8/1/2022
+========================
+In addition to the fix in pp_hyperlinkshow.py you will need an updated version of the pp_hyperlinkshow_1p4 example
+
+Version 1.4.6a  7/7/2021
+========================
+It will be necessary to update the profiles to version 1.4.6. The update will happen automatically if you edit the profile. I recommend making a backup of all profile directories before editing them.
 
 
-CHANGES FOR 1.4.5a 6/3/2021
-============================
-enhanced - added a new web track based on the chromium browser
-           web window parameters have changed
-           browser commands and functionalty redesigned to allow a limit to the number of loops
-           
-enhanced - added a new video track based on VLC
-           subtitle switch has been brought into the profile
-           display layer has been brought into the profile
-           VLC's Crop and Aspect Ratio can be accessed from the Profile as advanced options
-           Support for VLC's ability to play audio tracks and still images. The latter would allow an image to appear above a video
-           VLC does not support seamless loop
-           Audio device cannot be selected, except by use of the task bar. (Could be a bug in VLC not a limitation)
+Version 1.4.5c  2/6/2021
+========================
+Version 1.4.5a introduced new players for video and web:
 
-CHANGES FOR 1.4.4g 1/1/2021
-============================
-fixed - audio tracks and beeps now work with the Raspberry Pi OS release of Dec 2020 which uses pulseaudio instead of alsa. It can  also be made to work with earlier releases which use a different audio system.(see release notes)
-enhanced - added bluetooth and 2nd USB audio device to the set of audio devices
-enhanced - Information about PP's interpretation of pp_audio.cfg and connected devices obtained by 'python3 pp_audiomanager.py'
-modified - use paplay to play non .mp3 beeps instead of aplay
-modified - Information about PP's interpretation of displays removed from PP and can be obtained by 'python3 pp_displaymanager.py'
+ - If you want to use the old players for liveshows or artliveshows then uncomment the line video_player='video' at the start of pp_livelist.py
 
-CHANGES FOR 1.4.4f 27/9/2020
-============================
-enhanced - official touchscreen backlight can now be controlled by Show Control Commands
-modified  - touchscreen driver changed from FT506 to raspberrypi-ts to reflect its mainlining in Debian
+ - If you want to use the old players for other types of show then use the Track>New>OMX Video or Track>New>UZBL Web menu options.
 
+Version 1.4.5b 13/3/2021
+========================
+Selection of the VLC Video track audio device is now from the profile. The set of audio devices are the same as those for audio tracks and beeps and are set up in pp_audio.cfg (See manual)
 
-CHANGES FOR 1.4.4e 16/6/2020
-============================
-fixed - audio track and beeps now work with the Raspbian release of May 2020, in addition to earlier releases.(see release notes)
-modified - audio device names now match the physical labels on the board and (nearly) the new names on the task bar selector.
-enhanced - beep show control command now has an optional device parameter.
-enhanced - rtmp added to the list of acceptable streams for video track.
+'default' audio device has been deprecated and replaced with a blank entry in the Show; this is the same as the audio track. Templates, and examples have been updated to accomodate this change. If you do not download the new set of examples the deprecated audio device setting of 'default' will now result in use of the hdmi device and will show red in the profile editor until the field is edited.
 
-CHANGES FOR 1.4.4d 18/4/2020
-============================
-fixed - Display setup for Composite output (A/V) now works for Pi4 in addition to Pi3 and below
+Version 1.4.5a 6/3/2021
+========================
+This release adds new players for web and video tracks based on modern applications, Chromium and VLC.
 
-CHANGES FOR 1.4.4c 2/4/2020
-============================
+The old players based on omxplayer and UZBL have been retained but are deprecated and could be removed in a future release.
 
-FIXED -    Nasty bug in pp_manager where deleting a profile, media file, or livelist file
-           without first selecting it deletes all files in the directory.
-enhanced - Optional lock on livelist upload, for systems with dynamically updated
-           liveshows.
-enhanced - Update Remi to latest version.
-enhanced  - pp_manager.py and pp_web_editor.py now use only one port hence
-            should be useable with LAN's that have all but common ports locked down.
-enhanced - added a 'sender' field to pp_mail.cfg for ISP's where username
-           is not an email address (See release notes)
-enhanced - emails now have date field supplied for those ISP's that do not add it.
+omxplayer is deprecated by Pi Towers, VLC is their recognized replacement. UZBL is an old browser not updated since 2017, Chromium is now the Pi Towers default browser.
 
-CHANGES FOR 1.4.4b 20/3/2020
-============================
-Code
-enhanced - Display setup for Pi4 is now fully automatic  including rotation and variation in position of the monitors
-enhanced - On Pi3 display setup is semi-automatic. It requires the monitor to be rotated in /boot/config.txt and in pp_display.cfg  
-enhanced - On Pi4 both displays can be touchscreens (on Pi3 1), requires configuration in pp_display.cfg.
-modified - new configuration file for displays /pipresents/pp_config/pp_display.cfg
-modified - --screensize has been removed from the command line into the pp_display.cfg file
-enhanced - size and position of the windowed non-fullscreen displays can be set in pp_display.cfg
-enhanced - video track does not object if location is a stream (udp: tcp: rtsp:)
-enhanced - additional video window types in a video track based on omxplayer types
-modified - 'default' video window type replaces 'original' which is deprecated. 'default' better describes its purpose
-enhanced - PP plays nicely if python 3 is not used, instead of crashing
-enhanced - out of the box output_test.py has no pins selected (for gpio pin safety).
-enhanced - Monitor Show Control command can be used to power off/on individual displays
-enhanced - audio track 'audio player audio' can now specify hdmi0 or hdmi1 hdmi > hdmi0 if used for pi4
-modified - removed --verify command line option
-enhanced - track plugins can now be in /pp_home/pp_track_plugins (+), /profile/pp_track_plugins (@) in addition /pipresents/pp_track_plugins (no first char)
-modified - renamed PluginsManager class to TrackPluginsManager
-enhanced - added driver-ref field to I/O plugins. If specified in config file will be used to select the plugin queried by get_input() 
+Templates, Add Track button, New Show all use the new players. If you want to use the old players then use the Track>New>OMX Video or Track>New>UZBL Web menu options.
 
-note - cec appears broken in Raspbian/RPi with Buster. Tried on Pi 4 and Pi 1
+All the examples have been updated to use the new players. If you want to use these download them from the examples Github repository.
 
-fixed - message track's message now modified correctly by a track plugin.
-fixed - crash on start up if using a Pi Zero or Pi 1
-fixed - web track can now be added to a liveshow by a track plugin.
-fixed - crash if two video tracks are started at the same time
+New dependencies need to be installed. Refer to the README.md file or Github.
 
-Examples
-modified - moved all track plugins out of /pipresents/pp_track_plugins to their profiles
+It will be necessary to update the profiles to version 1.4.5. The update will happen automatically if you edit the profile. I recommend making a backup of all profiles before editing them.
 
+It is not possible to automatically convert old omx or UZBL tracks into VLC or chrome tracks as the fields in the profile are different, particularly the way in which the Video and Web Windows work. Details are in the manual. As always the default values should produce something useable.
 
-CHANGES FOR 1.4.4a 10/9/2019
-============================
-enhanced - Support for 2 displays on Pi4
-enhanced - limited support for 2 displays on earlier PI's
-enhanced - Support for official touchscreen on all Pi's
-modified - input_test.py and output_test.py now set for 40 pin Pi's by default
-enhanced - the conversion to Python3 should support Unicode
+Two changes are worth noting:
+  - For VLC volume is now 0 -> 100
+  - For Chrome Web the Browser command functionality is different. LOOP can have a value and the exit command has gone.
 
-regression - Subtitles on videos are currently not supported. If you want subtitles then you must use a Pi3 or earlier.
-limitation - HDMI audio output is currently limited to one HDMI screen (HDMI0)
-limitation - CEC and Power control of the individual screens is currently not supported.
+Please use the Issues tab on Github https://github.com/KenT2/pipresents-beep/issues to report any problems
 
+Version 1.4.4g 1/1/2021
+========================
+The Dec 2020 version of Raspberry Pi OS has changed the system for selecting the audio device, this time from alsa to pulseaudio. This has yet again disabled the control of audio device by Pi Presents.
 
-CHANGES FOR 1.4.3a 24/7/2019
-============================
-modified - upgraded code to Python 3. SEE RELEASE NOTES FOR UPGRADE PROCEDURE
-modified - web track, reduce the delay to load the image behind the browser to 1 second
+This version implements the pulseaudio method of control and also retains the old methods for people using earlier versions of Raspbian.
 
-enhanced - track text, message text and Show text can now show HTML in a pane
-enhanced - added 'open show' record to statistics recording- param required
-enhanced - the maximum volume of video sound can now be set
-enhanced - inc-volume and dec-volume commands for video and audio tracks omx-+/- and mplay-0/9 are deprecated
+There is a new configuration file  /pipresents/pp_config/pp_audio.cfg. If you are using the Dec 2020 version of RPi OS and only 1 or 2 hdmi and the A/V port then the configuration set in this file does not require change.
 
-fixed - video volume now works (changed from pseudo keyboard commands to dbus commands)
-fixed - crash if video track controls text invalid
-fixed - Pi Presents code can now be in any directory
-fixed - allow simulated years <2018
-fixed - show control, if OSC is not enabled then ignore OSC commands instead of reporting error.
-fixed - crash in serialdriver I/O plugin
+If you want to add USB or bluetooth devices then pp_audio.cfg will need to be changed to add the sink name of the device, details in the file.
 
-enhanced - pp_counter_1p4 example
-enhanced - new pp_html_1p4 example
-fixed - error in some examples due to absence of empty track in a liveshow
-fixed and improved  - pp_beep_1p4 example 
+If you want to use an older version of Raspbian then you must edit pp_audio.cfg. The previous method of detecting .asoundrc does not now work to detect the audio system in use. 
 
+As of writing there are a few bugs in the RPi OS:
 
-
-CHANGES FOR 1.4.2a 27/4/2019
-============================
-enhanced - time of day scheduler, disable catch up per show
-enhanced - statistice recording device driver seperated out to allow alternative recording device
-enhanced - mediashow and liveshow have repeat command to repeat the current track
-fixed - trailing comments delimited by ; not # in keys.cfg, also in example profiles
-fixed - crash when terminating Pi Presents from the Manager
-fixed - crash when exitpipresents is a Show Command in a show.
-fixed - errors in and improvements to the manual
-fixed - filenames in examples.sh
-
-
-CHANGES FOR 1.4.1a 20/7/2018
-============================
-NEW - Version 1.4 created as pipresents-beep in a new github
-repository
-NEW - pipresents-beep-examples github repository
-modified - 'trigger for next' now waits for a trigger between tracks
- and does not trigger during a track
-enhanced - beep show control command to play a short audio file
-enhanced - 'show control commands on event' one or more show control commands can now be triggered by
-and input event in addtion to the track control response. 
-enhanced - aplay I/O plugin allows short audio files to be played from animation commands
-enhanced - pp_beep_1p4 example demonstrates beeps and show control on event
-
-CHANGES FOR 1.3.5c 7/6/2018
-============================
-modified - readme.md ready for gapless to become the stable version
-modified - added upgrade_1p2_1p3.txt containing instructions for upgrade from pp-next to pp-gapless.
-enhanced - web editor, dropdown field values displayed in red if read value is not valid
-fixed - crash if linked pins are used in gpio.cfg
-fixed - crash if I/O plugin .cfg file has errors
-fixed - crash if track plugin is not found.
-
-
-CHANGES FOR 1.3.5b 31/5/2018
-============================
-enhanced - I/O plugin for PN532 RFID tag reader
-enhanced - cec show control commands to turn TV on/standby
-fixed - crash if there are no anonymous tracks on a medialst.
-fixed - network detection more resilient to peculiar ip route response
-
-
-CHANGES FOR 1.3.5a 1/05/2018
-============================
-enhanced - use web editor instead of the schedule.json file to edit a schedule
-enhanced - schedule can now execute all show commands
-enhanced  - schedule can contain multiple day statements
-
-CHANGES FOR 1.3.4d 25/03/2018
-============================
-fixed - memory leak when using subshows issue #20
-fixed - minor improvements to some examples
-
-CHANGES FOR 1.3.4c 10/03/2018
-============================
-enhanced - pp_kbddriver_plus enhances pp_kbddriver by allowing strings to trigger events and to be used by track_plugins
-enhanced - pp_kbddisplay_1p3 example using pp_kbddriver_plus
-enhanced  - krt_camera track plugin allows the Pi'c amera to be used to display real time images and capture pictures
-enhanced - pp_camera_1p3 example
-modified - debug_autostart.sh now has example text for debugging PP at autostart in addition to pp_manager.py
-fixed - pp_serialdrive I/O plugin, individual events can now be disabled
-fixed - various quality improvements
-
-CHANGES FOR 1.3.4b 21/02/2018
-============================
-enhanced - values input by I/O plugins are now available to track plugins via get_input() method. See Release Notes.
-enhanced - new serial port I/O plugin
-enhanced - new serial port examples pp_serialcontrol_1p3 and pp_serialdisplay_1p3
-enhanced  - new I2C I/O plugin supporting ADC, DAC, Pimoroni Four Letter PHat and ScrollHD PHat.
-enhanced - new examples for I2C driver pp_i2cioplugin_1p3
-fixed - animation commands now work if there is more than one space between fields
-fixed - pp_kbddriver now can be disabled
-fixed - PP does not crash if time of day scheduler is used with no Start Shows
-
-
-CHANGES FOR 1.3.4a 13/01/2018
-============================
-enhanced - pause now has a timeout, set in the profile
-enhanced - added closeall, openexclusive and reboot show/OSC commands
-
-CHANGES FOR 1.3.3c 8/12/2017
-============================
-enhanced - OSC
-enhanced - added pp_osc_1p3 example
-
-CHANGES FOR 1.3.3b  21/10/2017
-====================
-enhanced - documented I/O plugin API in manual and added pp_exampledriver.py demonstrated in pp_ioplugin_1p3 example
-enhanced -  animate commands can now have strings containing spaces provided they are surrounded by ""
-enhanced - added empty pp_io_config directory to templates
-fixed - increase timeout on unpause for show for slow to load video tracks (.avi seems much slower than .mp4)
-fixed - crash if an input event happens immeadiatly after PP starts.
-
-
-CHANGES FOR 1.3.3a  27/09/2017
-====================
-enhanced - io_plugins. Users can write their own I/O device driver 
-enhanced - input_device.py utility assists configuration of devices in /dev/input that use evdev
-enhanced  - new i/o plugin (pp_inputdevicedriver.py) for devices in /dev/input that use evdev
-enhanced - new .cfg file which configures pp_inputdevicedriver.py specifically for OSMC official remote control.
-enhanced - Pi Presents - New method of programming the shutdown pin in gpio.cfg. Allows other device drivers to do shutdown
-enhanced - videoplayer, more real time controls added
-enhanced - liveshow, added 'escape' track to allow use of stop command when the 'empty' track is a show.
-enhanced - Pi Presents - detect there is no user and object
-enhanced - players, x,y,colour, font and justify for Track Text is now in show profile track default tab
-enhanced - radiobuttonshow, profile option to allow controls in subshows
-enhanced - web editor, improved layout of track/show editor to reduce its height
-enhanced - web editor, track has a menu entry to copy a track
-enhanced - counters, new feature to define, increment, and disply counters.
-enhanced - new example pp_counters_1p3
-enhanced - new example pp_quiz_1p3 - shows how a hyperlinkshow and counters can be used in a multiple choice quiz,
-
-deleted - the ability to validate a profile from Pi Presents using the -v command line option
-deleted - the retired original editor pp_editor.py
-
-fixed - manager, can now run a profile from other than /home/pi/pp_home
-fixed - manager, download profile
-fixed - radiobuttonshow, if first track is not specified then an anonymous track is not played
-fixed - web editor, background is not grey on vga monitors
-fixed - web editor, track, add directory now works
-fixed - web editor, backups of profile are now stored in the correct directory in pp_profiles.bak
-fixed - web editor, running the editor without a network is now possible
-fixed - validate, blank track text x,y shown not as error
-fixed - animate, remove crash if there was an error in animate at end command
-fixed - image track and background images, if an image is corrupt objects properly instead of throwing a python exception
-fixed - show control begin now happens after show control end for the previous track when changing tracks
-fixed - track plugins and show control re-ordered to allow counters to work.
-fixed - track plugin text is deleted at the end of a track if no redraw
-modified - track plugin API simplified by removal of 'draw(). code in draw() now in show().
-fixed - time of day scheduler, when using the time of day scheduler with with simulated time, log now shows simulated time of day
-fixed - gain of local channel in pp_audioplayer.py increased by 40 to compensate for changes in Raspbian Stretch
-fixed - import ptyprocess error fixed by alternative method of installing pexpect (see readme.md)
-fixed - typo corrections profile for pp_openclose_1p3 close/closed
-fixed - pp_videoplayout_1p3 example profile, added pause and mute to radiobuttonshow
-fixed  - removed extraneous osc.cfg from pp_showcontrol_1p3 and pp_showcontrolevent_1p3 example profile
-
-
-CHANGES FOR 1.3.2a  1/4/2017
-====================
-enhanced - Manager,delete and rename media, livetracks, profile, download log and stats, reboot and shutdown Pi
-enhanced - web editor updated for latest version of remi; gives a more modern look and feel
-enhanced - web editor, profile update now updates automatically between minor versions e.g. 1.3.1>1.3.2 in both editors (--forceupdate not required)
-enhanced - web editor  makes a backup in pp_profiles.bak before doing an update
-enhanced - web editor, copy profile, delete button, selecting a show automatically selects its medialist
-enhanced - web editor has command line options for remote, local, and native display
-enhanced - web editor, shows, medialists and tracks are displayed alphabetically
-enhanced - web editor, adding a menu show now adds a menu track
-enhanced - GPIO linked output,an output pin can now be directly linked to an input pin (gpio.cfg) ??? in Manual?????
-enhanced - players, additional track commands pause-on, pause-off, mute, unmute
-enhanced - video track can now be 'frozen at start', either before or after the first frame. Additional command, 'go', unfreezes the track
-enhanced - pp_magicpicture_1p3 example rewritten to use freeze at start
-enhanced - new example pp_videoplayout_1p3 to show video playout possibilities using the new 'freeze-at-start' parameter' and Go command
-enhanced - the background colour behind show canvases can now be set from the editor in Start Show
-enhanced - shows now have 'show control at beginning' and 'show control at end'
-enhanced - new show control command 'event symbolic-name' allows one show to send an event to other shows
-enhanced - new show control command monitor on/off controls monitor power using vcgencmd
-enhanced - new pp_showcontrolevent_1p3 example demonstrating show control events and the pause-on/pause-off commands.
-enhanced - PP reports an error if Pi Presents is not run from a desktop
-enhanced - Window definitions can now be x1+y1+w*h in addition to x1 y1 x2 y2
-enhanced - Media can now reside inside a profile, by convention in the directory 'media'. Accessed using @ e.g. @/media/my_track
-enhanced - calibrated the output level for audio tracks so that it is the same as video. Resuting lower volume also reduces distortion on audio tracks
-enhanced - menu now returns with the just played entry highlighted, not the first entry
-enhanced - text can now be centred on the show canvas and justified.
-enhanced - for liveshow, when the list is empty the list empty track is played, or exits if single run
-enhanced - liveshow can execute show control commands on transition empty>not-empty and not=empty>empty
-enhanced - new example pp_liveshowempty_1p3 demonstrating list empty functions
-enhanced - for liveshow shuffle is now a proper 'card shuffle' not random.(mediashow still random)
-
-fixed - web editor moves i/o config files to pp_io_config when moving from 1,2 to 1.3.x 
-fixed - missing error report when opening osc.cfg in Pi Presents
-fixed - crash when medishow or liveshow is using shuffle with a single track
-fixed - web editor, removed leading and trailing spaces from edited items so that they validate OK
-fixed - again! radiobuttonshow now allows a radiobutton to be pressed during a subshow at the expense of the subshow not having any controls.
-        To change back edit pp_radiobuttonshow.py in def handle_input_event()
-fixed - liveshow now skips dot tracks (.sync etc) instead of exiting the show
-fixed - web editor validation now tests if first/home track is blank before trying the medialist
-fixed - crash in image track when interpolation method is specified
-fixed - removed initial blip of sound from a video track during artmediashow
-fixed - PP now exits immeadiately on Terminate or SIGTERM even if in a track which opens a show at its end
-fixed - menu bounding box and extent are displayed in the correct colours
-fixed - crash if menu geometry paramters are erroneous
-fixed - regression, liveshow can now include web tracks
-fixed - crash if liveshow has a child track
-fixed - playing of liveshow when there is a non-anonymous track
-fixed - artliveshow now does not return an error when a track is deleted from the livelist
-fixed - removed sudo from pp_control.sh
-fixed - shutdown the Pi, changes for Jessie compatibility
-
-
-
-Version 1.3.1i 11/12/2016
-
-enhanced - The Manager now automatically detects the IP address of the Pi which can then be sent by email to the remote user.
-enhanced - email alerts from Manager and Pi Presents
-enhanced  - extend Manager for managing livetracks, deleting media, downloading logs
-enhanced - improved logging to debug time of day scheduler
-enhanced - Manager and Pi Presents (optionally and if ToD scheduler is to be used) now  wait until the network is available
-enhanced - log now reports version of Raspbian and omxplayer, and GPU memory
-enhanced - added alsa to video track audio output
-enhanced - warning about shows in start show made dependent on ToD scheduler
-enhanced - In the Manager there is now a link to open a browser tab when running the editor.
-enhanced - In the Manager there is menu option to reboot the Raspberry Pi, primarily for if Pi Presents hangs and cannot be exited.
-enhanced - In the Manager profiles are sorted alphabetically.
-fixed - omxplayer, improve stability again
-fixed - removed deletion of dbus daemon at start
-fixed - editor, do not abort validation if there are media files in the profile, warn instead. 
-fixed - several corner case bugs in Manager
-
-
-Version 1.3.1h 5/11/2016
-Enhanced - When using GPIO it is now not necessary (or possible) to use sudo.
-Enhanced - an event for statistics reporting can now be generated for every track. Out of the box this is commented out in pp_gapshow.py in the function 'start_load_show_loop'
-Enhanced - It is now possible to debug pp_manager.py when it is run at boot by executing the script debug_autostart.sh in LXDE-pi/autostart
-Fixed - video tracks playing is more reliable. To achieve this GPU_MEM needs to be increased to 128MB if playing videos.
-Modified - browser update interval for pp_manager.py changed from 0.1 secs to 0.2 secs to  reduce processor loading on older models of RPi
-Fixed - added blank option to Videoplayer Field of shows to match manual
-Fixed - undefined error code in pp_manager. But if Pi Presents fails because a Python error is detected this will still produce an undefined error.
-
-
-Version 1.3.1g 12/6/2016
-Fixed - omxplayer interface now uses dbus instead of pexpect - see release notes. Hopefully this will reduce video track hangs with Jessie.
-Fixed - audioplayer other options now work correctly
-Fixed - audioplayer other options in a track are now not ignored
-Fixed - radiobuttonshow, events are now passed to subshows
-Fixed - Start of Web based manager delayed until CWD is a available. Required for Jessie autostart - see manual
-Fixed - Start of Pi Presents delayed until CWD is a available. Required for Jessie autostart - see manual
-
-Version 1.3.1f 26/2/2016
-Enhanced - Web Based manager pp_manager.py
-Enhanced - Web based Editor pp_web_editor.py
-
-Version 1.3.1e 6/2/2016
-Enhanced - Adding logging option suitable for gathering statistics. See Release Notes for details.
-Enhanced - Added --manager command line option and other preparations for a web based manager and editor.
-Fixed - In image track. if the track was stopped when paused the pause text was not deleted
-Fixed - PP would not exit correctly if shutdown was initiated while in a show which opened another show at its end.
-
-Version 1.3.1d 5/7/2105
-Enhanced - linux kill command will now exit pipresents cleanly (SIGTERM) pp_control.sh demonstrates
-Enhanced - colour of Pi Presents background can now be set (line 50 of pipresents.py pending inclusion in profile
-Fixed - In radiobuttonshow can now select an alternative track when in a subshow. This is at the expense of allowing a subshow to be controlled in a radiobuttonshow.
-
-Version 1.3.1c 31/5/2105
-Enhanced - Artmediahow will now use the Controls in a track, merging them with the Controls from the Show
-Enhanced - Speeded up videoplayer by removing running of omxplayer just to obtain the duration of the track  - requires a later version of omxplayer. (see release notes)
-Enhanced - halved the timeout for killing omxplayer
-Fixed - mediashow controls could have been those set in the show not those merged with a track. This happens only at the very beginning of showing a track.
-Fixed - calculation of time to freeze for video tracks.
-Enhanced - pp_radiobuttonshow_1p3 example updated so that a running track cannot be restarted.
-
+ - The sound can lock up if there are two hdmi monitors connected to a Model 4 Pi.
+ - On my new install using 2 hdmi monitors stopped A/V sound.
+ - People have had problems upgrading from the previous version of RPi OS, mainly audio not playing on some devices. A fresh install works better.
+ - It is not a good idea to change the default audio device from the task bar while PP is running.
+ - short tracks do not play reliably on bluetooth devices.
  
+
+Version 1.4.4e 16/6/2020
+========================
+The May 2020 version of Raspbian (now Raspberry Pi OS) has changed the system for selecting the audio device. This has disabled the control of audio device by Pi Presents. However it is still possible to control it from the Task Bar.
+
+This version implements the new method of control and also retains the old method for people using earlier versions of Raspbian. To select which method to use PP detects the existence a file called .asoundrc which is always in the /home/pi directory for the new audio system but generally not in the old system. However it may be present in an earlier version of Raspbian if a USB sound device was used. So this version of PP will not work with an earlier version of Raspbian if a USB audio device has been used. The workaround for this is to delete .asoundrc if the USB device is not currently attached, or to find the variable audio_sys in pp_audioplayer.py and pp_beepsmanager.py and uncomment the line audio_sys='pi'.
+
+I have also changed the names of audio devices to closer match those on the task bar and those printed on the board. The old names still work but will not appear in the editor.
+
+
+Version 1.4.4c 2/4/2020
+========================
+There is a new field 'sender' in /pp_config/pp_email.cfg. This is used in From: field
+of the email and allows From to be different from username.
+Add the field to pp_email.cfg. If you do not username will be used instead. Editing the
+email configuration when running pp_manager will also add the field.
+
+
+
+Version 1.4.4b 20/3/2020
+========================
+Support for 2 displays has been improved to include rotation of the displays
+touchscreens are automatically calibrated depending on monitor position and rotation
+
+Read the Section of the Manual on setting up displays and touchscreen. Setup has changed (for the better)
+
+There is a new configuration file /pipresents/pp_config/pp_display.cfg
+The out of the box values in this file should work for most situations but will need editing if:
+* A HDMI monitor has a touchscreen
+* On Model 3/2/1 you are using screen rotation
+* You have used --screensize
+* You have altered the size or position of the windowed non-fullscreen display
+
+Track plugins can now be in a profile or pp_home. In the examples they have been moved from 
+/pipresents/pp_track_plugins and there are now none of the exmple plugins in this directory.
+I recommend you move any you have created to the profile where they will not be overwritten by software upgrades
+
+The Monitor Show Control Command must now have the name of the monitor
+
+The 'original' video window type of a Video Track has been ??? in favour of 'default'. 'original may be deleted some time in the future.
+
+Version 1.4.4a 9/9/2019
+========================
+Pi Presents now supports 2 displays on Pi4 and to a limited extent on Pi3
+The 2 displays may be the official touchscreen and HDMI0, or HDMI0 and HDMI1 on Pi 4
+This version must use Raspbian Buster
+Read the section in the manual on using multiple displays as they need to be configured.
+
+Consequent changes:
+a. I the command line --screensize becomes --screensize0 and --screensize1, for Pi3 or single display use --screensize0
+b. Additional displays field in each section of screen.cfg
+
+
+Version 1.4.3a 24/7/2019
+========================
+Pi Presents is now Python 3. It will not run under Python 2.
+The last Python 2 release 1.4.2 a has been tagged as a Github Release if you want it.
+
+To upgrade to this version install the Python 3 version of some packages:
+
+      sudo apt-get install python3-pil.imagetk
+      sudo apt-get install python3-pexpect
+      sudo pip3 install evdev
+
+The Python 2 versions of these packages can be left installed.
+
+The command to run Pi presents is python3 instead of python
+
+Your profiles will require update for new features
+
+
+Version 1.4.2a 27/4/2019
+========================
+This version adds a new field to shows to disable catch up. Profile will require update.
+The statistics log output has an additional field containing the profile name
+
+Version 1.4.1a 20/7/2018
+========================
+Althought in a new repository this version is a minor improvement to Version 1.3.5a
+New fields have been added to the profile. You will need to update all your profiles by using the web editor
+This version adds an I/O plugin that required a change to the I/O Plugin API - 
+All I/O Plugins you have created need to have the following parameters added to
+ the init() method pp_dir,pp_home,pp_profile. See a provided I/O plugin for where to add them.
+
+Version 1.3.5a 1/5/2018
+=======================
+This version integrates editing the time of day schedule with the web editor.
+The schedule.json file is no longer used. Keep it temporarily as you will require it to manually populate the profile.
+The schedule is in the schedule tab of each show and of the Start show (pp_core section of schedule.json)
+The content is the same, the primary change to format is that the fields of the time lines are reversed (now 13:50 open)
+
+Version 1.3.4d 25/03/2018
+==============
+This version fixes a long standing memory leak when using subshows. The fix involved the most complex part
+ of PP so I hope I have not introduced other bugs. Please contact me if a previously working application is now broken
+ 
+ 
+version 1.3.4b
+==============
+This version adds a new interface method to I/O plugins which is called by the I/O plugin manager.
+All I/O plugins need to have the following method added:
+
+    # allow track plugins (or anything else) to access input values
+    def get_input(self,channel):
+        return False, None
+
+version 1.3.4a
+==============
+This version adds a new field to shows and tracks to provide  the value of the paue timeout
+You will need to update all your profiles by using the web editor
+
+
+version 1.3.3c
+===============
+This version is a redesign of the OSC interface
+The format of the profiles do not require update except that:
+	-  the osc configuration file, /pp_io_config/osc.cfg, content is different. If you have any profiles with OSC configutration file delete this file and recreate it using the web editor's osc>create menu item.
+	
+	- The show control commands for osc will require modification. They are now of the form 'osc unit command paramters (see manual)'
+	
+	the osc message /core/output has changed to /osc/animate
+	
+
+The configuration files for the  test programs pp_oscremote.py and pp_oscmonitor.py in /pipresents/pp_config have been replaced. They can be edited using the editor built into the programs.
+
+
+
+version 1.3.3b
+=================
+This version doccuments the I/O plugins API and provides examples
+It fixes a few bugs
+No changes to the profiles or configuration files required.
+
+
+Version 1.3.3a
+=================
+
+Version 1.3.3a introduce I/O plugins and quiz counters. There is a fix to liveshows and other smaller enhancements and fixes.
+
+You will need to update your profiles using the editor.
+
+I/O Plugins
+-----------
+input/output is now implemented as plugins so people can write their own. The following changes are required to introduce configuration files:
+
+If you have a modified gpio.cfg or keys.cfg in /pipresents/pp_config  then these should be moved to /pipresents/pp_io_config
+
+gpio.cfg and keys.cfg in a profile remain in /pp_io_config
+
+Any keys.cfg file you have created will require moodification to add the following section
+
+[DRIVER]
+title = Tkinter Keys    
+enabled = yes
+bind-printing = yes
+module= pp_kbddriver
+
+See updated /pipresents/pp_io_config/keys.cfg
+
+Any gpio.cfg file you have created yourself will require moodification to add the following section
+
+[DRIVER]
+title = GPIO    
+enabled = yes
+tick-interval = 50
+module= pp_gpiodriver
+
+See updated /pipresents/pp_resources/pp_templates/gpio.cfg
+
+
+/dev/input I/O plugin
+---------------------
+There is a new I/O plugin pp_inputdevicedriver.py which suppports devices such as wireless remote controls
+To use this it will be necessary to install evdev (sudo apt-get install evdev)
+
+
+Shutting Down the RPi from Pi Presents
+-----------------------------------------
+The method of achieving this has changed. The delay is now implemented by the I/O plugin so gpio.cfg requires change to any pin used for shutdown:
+
+# shutdown the Rpi after 5 seconds
+# changed for version 1.3.3a
+[P1-12]
+direction = in
+rising-name =
+falling-name = 
+one-name = 
+#event is sent after the button is pressed fo 5 seconds NOTE CHANGE OF SYMBOLIC NAME
+zero-name = pp-shutdownnow
+# 50mS*100
+repeat = 100    
+threshold = 8
+pull-up-down = up
+
+See updated /pipresents/pp_resources/pp_templates/gpio.cfg
+
+
+Liveshows
+---------
+Liveshows have been improved to cope with a lockup condition when an empty liveshow was a subshow. It was not possible to return to the parent show.
+There is a new field in the profile called an Escape Track
+The List Empty Track is now mandatory. The Escape Track is now esential if the List Empty track is a show, it must not be a show. See updated example pp_liveshowempty_1p3
+
+
+
+Version 1.3.2a
+=================
+
+Version 1.3.2a continues the improvements to Remote Management including a revamp of the look and feel of the Manager and Web Editor. Otherwise there is a large number of enhancements to the core show/player.
+
+The existing editor pp_editor.py will be discontinued after this issue. It is replaced by the web based editor pp_web_editor.py. pp_web_editor.py displays in a browser. It works well on the local Pi and can also be used remotely from any computer with a browser.
+The old editor has been updated for this version of Pi Presents but not rigoursly tested. Please use the new editor.
+
+The improvements to the core functionality require changes to the fields in a profile. The example profiles have been updated and  you should download the latest set of profiles from Github. Profiles made under previous versions of PP will not run with this version and will produce an error message. However if you edit those profiles they will automatically be updated, a backup being made first.
+
+After using the editor to update the fields of the profile some of the field content will require manual update.
+
+Liveshow
+Liveshows have been enhanced such that if the livelist is empty an alternative track or show can be played.  This is controlled by the List Empty Track field of the liveshow. After update this will be blank resulting in a blank display for an empty list. Replace this with a media track or a show track if required.
+
+
+Version 1.3.1i
+
+* Significant improvements to Remote Management.
+
+    -  The content of pp_web.cfg has changed so do not copy it across from the previous version.
+	There are additional and renamed fields in the manager and manager editable section to add livetracks and change copy to import.
+    Unit has moved to the network section ip has been removed to  be replaced by preferred_interface and force_ip which for most user will need to left blank
+	 
+	- There is a new configuration file pp_email.cfg. Out of the box it disables email alerts, read the manual to set up email alerts.
+
+* Fixes bugs that were causing instability playing videos.
+
+	In 1.3.1g I changed the omxplayer interface to use dbus. 1.3.1h and 1.3.1i improves the stability of this interface. In addition to changes to the code I have found that it is essential to:
+
+      1.  Increase GPU memory from the default 64 MB to 256 MB. This is achieved using the Raspbian menu Preferences>Raspberry Pi Configuration>Performance, increase the 64 to 256.
+
+      2. Use a version of omxplayer dated 23 Sept 2016 or later. Thsi version is in the latest version of Raspbian or can be obtained from here http://omxplayer.sconde.net/ (I recommend keeping Raspbian up to date).
+	  
+	Running Pi Presents with the -d option will produce a log which tells you the version and gpu memory you are currently using
+	
+* A log which is designed to help debuf Time of Day Scheduler problems. Enable with -d 256.
+
+* Other minor improvements, see changelog.txt
+-------------------------------------
+
+Version 1.3.1h
+A bug fix release primarily to improve the reliability of playing videos. 
+
+* In 1.3.1g I changed the omxplayer interface to use dbus. 1.3.1h improves the reliability of this interface. In addition to changes to the code I have found that it is essential to increase GPU memory from the default 64 MB to 128 MB. This is achieved using the Raspbian menu Preferences>Raspberry Pi Configuration>Performance, increase the ???? to 128.
+
+* Jessie does not require sudo when using gpio, however Pi Presents did, a hangover from Wheezy. I have removed this requirement and, for other reasons stopped Pi Presents being used with sudo.
+
+* Other minor improvements, see changelog.txt
+
+Version 1.3.1g
+
+A bug fix release.
+
+* The last version to use omplayer compatible with Raspbian Wheezy was issued on 29/4/2016 hence this will be the last version of Pi Presents Gapless to be tested on Raspbian Wheezy.  
+
+* In an attempt to remove occasional hangs when playing videos (1 in 24 hours when running a 1 second video!) this version uses dbus as the interface with omxplayer instead of Pexpect (Pexpect is still used for other players). Dbus is now the preferred interface for omxplayer so should provide better long term support. The Dbus interface in  pp_omxdriver.py is experimental and not complete in that it does not implement all key bindings for run-time controls. (You can add addittional bindings to the KEY_MAP dictionary at the start of pp_omxdriver.py). Should you need to revert the repository contains the Pexpect version of the interface in pp_omxdriver_px.py.
+
+* Raspbian Jessie uses systemd; it appears that user programs in the autostart file can now be started before the operating system is fully runnning. This requires a change to the autostart process as described in the manual and for Pi Presents and the Web Based Manager pp_manager.py to wait until the operating system boot is complete.
+
+
+Version 1.3.1c
+
+This release makes use of a later version of omxplayer. Anything after 21 July 2014  (92aad3f) will do. The latest version of Raspbian has a suitable (but not the latest version).
+
 Version 1.3.1b 24/5/2015
-Enhanced - Improved validation
-Modified  - in the Editor Browser Window is now called Web Window
-Enhanced - Improved sync between master and slave when using OSC by moving when show control commands are executed
-Fixed - bug in menushow where using cursor during a track caused a python error
-Fixed  - Increased omxplayer track load timeout to avoid crash when 100% loaded e.g. during pp_multiwindow_1p3 on Model B
-Fixed  - race condition where PP was not ready to action OSC commands if sent just after it had started.
-Modified - in radiobuttonshow you can now re-start a track while it is playing.
-      Very useful when using radiobuttonshow as a slave track player.(The recommended way of using OSC)
-      To stop re-starting a track while it is playibg bind the symbolic name to null in track Controls
-Fixed  - videoplayer and radiobuttonshow so radiobuttonshow does not leave processes alive when
-         track is stopped to play another track.
-Fixed - mediashow, liveshow, and menu produced an error if an event was received with a symbolic name that was not bound in Controls
-Enhanced - Warn rather than generate an error if a liveshow directory is not found when PP starts.
-        Allows a liveshow to be started and then USB stick to be plugged in after.
-Fixed - videoplayer sometimes left omxplayer process running after Ctrl-Break or use of Close icon
+* In radiobuttonshow you can now re-start a track while it is playing.
+     This is very useful when using radiobuttonshow as a slave track player.(The recommended way of using OSC)
+     To stop re-starting a track while it is playing bind the symbolic name to null in track Controls
 
+Version 1.3.1a 3/5/2015
+This version has many new fields so the major version number has increased from 1.2 to 1.3
 
-Version 1.3.1a  3/5/2015
+* This version of Pi Presents will not run shows prepared under previous versions of pp_editor.
 
-GAPLESS TRANSITIONS
-New - all shows now have gapless transitions. In the case of video tracks by freezing the video just before the end of the track while the next track loads.
-New - artmediashow and artliveshow providing gapless transitions without freezing at end of track.
+* Using the Version 1.3 editor on a previous version of a profile will automatically upgrade the profile fields to the current version. However there are many additional changes you will have to do manually. The changes described in the last section of the manual.
 
+* You may find it easier to construct your profiles from the templates/examples than to do all the moodifications that are necessary.
 
-TIME OF DAY SCHEDULER
-New - time of day scheduler that can control any type of show. Schedule can be different for days of the week, days of the month, and special days. When starting Pi Presents in the middle of a day it catches up by skipping through the schedule.
-
-MULTI-WINDOW
-New - it is now possible for concurrent shows to all display content on the screen. There is a show canvas field in show profiles to help with laying out multiple shows on the screen.
-New - The Live Tracks Directories for Liveshows can now be specified in the show profile. This allows two concurrent liveshows to have different content.
-Modified - show and track background images are warped to fit the screen or Show Canvas. If warping is undesirable then edit the image to match the dimensions of the screen or canvas.
-
-REMOTE CONTROL
-New - A Pi Presents unit can now be controlled from another Pi Presents unit or any computer, including Smartphones and Tablets that support Open Show Control.
-New - Editor can create, edit and delete OSC configuration files.
-
-PIPRESENTS
-New  - the --screensize command line option changes the effective screen size to assist development of profiles running on a target display with different pixel dimensions.
-Enhanced  - --home (-o) command line option is not required when using sudo. Pi Presents detects sudo and compensates.
-Enhanced - The -d command line option now logs the minor version number of Pi Presents and the reported screen size.
-Enhanced - The -d command line option has an optional parameter allowing finer control of logging.
-Modified - The -g command line option has been removed. GPIO is enabled by the presence of gpio.cfg in the profile.
- 
-
-
-SHOWS
-Enhanced - All shows now have their own controls instead of inheriting from their parent. This allows, for example, mediashows which are subshows of hyperlinkshows to have controls. controls.cfg is redundant and has been removed.
-Enhanced - show background images are now not reloaded for every track, increasing speed of transition.
-Enhanced - Eggtimer now available for all shows. Its text and position are fully configurable in the profile.
-Modified  - removed reference to Internal operations and Links. There are now Commands and Controls for all shows with the available Commands for each type of show being different. A Control is the binding of a Symbolic Name to a Command which is stated in the Controls field of a Show or Track.
-Fixed - in mediashow and liveshow input events that affect triggers are now passed down to subshows
-Fixed - Stop now stops the show when the show is in the appropriate (quiescent) state. Before the effect of stop was non-intuitive.
-Enhancement - Exit command introduced for all shows to always exit the show whatever its state.
-Enhanced - Egg Timer text position and format is now programmable in the profile for a show
-Enhanced - menu, radiobuttonshow and  hyperlinkshow now have show timeout and track timeout.
-Enhanced - all administrative message text has been moved from resources.cfg allowing each show to have a different message.
-
-
-SYMBOLIC NAMES
-Modified - pp-exit pre-defined symbolic name is now pp-exitpipresents to avoid clashes of terminology.
-Modified - in keys.cfg  pp-exit is now pp-terminate to avoid clashes of terminology
-
-
-
-MEDIASHOWS/LIVESHOWS
-New - liveshows now have the same more extensive functionality as mediashows except for the source of the tracks(they share the majority of their code)
-New - trigger end of show from an input
-New - count limit field allowing the show to be n tracks long
-Enhanced - now shuffles the first track of a show (thanks drewkeller)
-New -  input-persist trigger designed to implement 'magic pictures'
-Enhanced - The Live Tracks Directories for Liveshows can now be specified in the show profile. This allows concurrent liveshows shows to have different content.
-Modified - repeat and triggers simplified (single shot and interval are now  special cases of repeat)
-Modified - waiting for start trigger. It cannot now be triggered by Play or Down commands. If trigger by a key is required then bind start trigger parameter to a key.
-Modified - input-quiet has been removed as the trigger text can now be edited.
-Enhanced - child tracks are allowed in addition to child shows. The Has-Child field has been replaced by the Child field which can contain a user defined track reference (which can be a show track) in the medialist of the show . The Child-Show track type has been removed.
-Modified - removed manual mode from mediashows. Can be simulated by making duration of tracks 0 and placing a blank track after a video track or freezing it.
-Enhanced - liveshow now ignores hidden files (leaf name has . as first character)
-Fixed - liveshow with media from usb stick but profile on SD card now waits for the stick to be mounted
-
-MENUSHOW
-Modified - the layout of the menu is now specified in a special Menu Track instead of in the show. The menu track is refered to in the show. The editor converts the profile to this format including moving all the data from the show to a new track in the medialist.
-Modified - menu background is now specified in the menu profile not as a menu background track in the medialist. menu background track has been removed.
-
-
-HYPERLINKSHOW
-Fixed - display of click areas is now correctly controlled by symbolic names in controls. Allows soft buttons.
-Modified - subshows return to the calling track instead of obeying links in the hyperlinkshow.
-Enhanced - It is now possible to pause tracks and use run-time controls.
-Enhanced - It is now possible to turn on the path debugging display from the profile. No code modification required.
-
-RADIOBUTTONSHOW
-Enhanced - there can be Controls in tracks overriding Controls in the show. Allows selective movement to other tracks.
-Enhancement - now has exit and return commands
-Enhancement - It is now possible to pause tracks and use run-time controls.
-Fixed - Links are checked against radiobuttonshow Commands not hyperlinkshow Commands
-
-CLICK AEAS AND SOFT BUTTONS
-Enhanced - All shows (not just hyperlinkshows), other than artshows, can have click areas and soft buttons.
-Enhanced - All tracks have controls the content of which are merged with and override show controls.
-Enhanced - Click areas can now have associated images which can be used as buttons.
-Enhanced - Points for rectangles can now be written as x+y+width*height in screen.cfg
-
-VIDEO TRACKS
-Enhanced - video tracks now have optional 'freeze at end' to cover gaps between tracks etc.
-Enhanced - video track now supports omxplayer loop option (--loop)
-Enhanced - 'video player options' now inherits from a show.
-Enhanced - 'both' -o option supported.
-Enhanced - more track types are allowed in liveshow and when 'adding from directory'
-
-AUDIO TRACKS
-Fixed - duration of an audio track in a liveshow is blank instead of inheriting from a show.
-Enhanced - track does not need to be blank when duration is zero as there will be no attempt to play it.
-Modified -  clear screen removed
-Fixed - mplayer volume is now reset at start of track so is reset after being changed by run-time commands.
-
-IMAGE TRACKS
-Enhanced - images can be rotated.
-
-TRACK PLUGINS
-Enhanced - It is now possible to draw any number of Tkinter canvas objects using the API.
-Modified - API has been modified because of gapless transitions and multi-window
-
-SHOW CONTROL
-Modified - change names from start/stop/exit to open/close/exitpipresents to avoid clashes of terminology.
-Modified - show control commands have their fields reversed e.g 'open show' not 'show open'
-
-ANIMATION
-Modified - the order of fields in the animate command has been altered and additional I/O types facilitated by the introduction of a type parameter. The delay paramter is now mandatory.
-Fixed - two events required at the same time are now executed in order they were created.
-
-GPIO
-Enhanced- gpio.cfg now contains pin definitions for B+ and 2B models.
-Modified  - GPIO is enabled by the presence of gpio.cfg in the profile. The -g command line option has been removed.
-
-
-CONFIGURATION DATA and /pipresents/pp_home
-Modified - configuration files screen.cfg, gpio.cfg, and keys.cfg are now limited to the /pp_io_config sub directory of profiles and cannot be placed in data home or /pipresents/pp_home. The presence of .cfg files will in future be the method of enabling user written I/O plugins. (There is an exception for keys.cfg, see manual)
-Modified - pp_home has been removed and its content reorganised:
- -  pp_config contains configuration data that it is useful to stay in /pipresents including a fallback keys.cfg.
- -  pp_resources contains a minimal set of icons used as fallback by Pi Presents.
-  - pp_resource/pp_templates contains examples of configuration files with instructions and show templates for use by the editor.
-  - pp_track_plugins contains the python code for track plugins.
-  - logs are now in pp_logs
-  - pp_io_plugins will contain the code for user written device drivers.
-Modified - pp_resources.cfg has been removed. All its content is now in show profiles allowing messages to be tailored to shows.
-
-EDITOR
-Enhanced - now has offset in it options dialogue allowing pp_profiles to have sub-directories.
-Enhanced - can now copy a medialist
-Enhanced - can create, edit and delete OSC configuration files.
-Enhanced - a readme.txt file is allowed in a profile so the profile can be documented.
-Fixed - --debug now works correctly
-
-Version 1.2.3e 11/8/2014
-Fixed bug in videoplayer where animation commands at the end of the track were those specified for the beginning of the track
-
+---------------------------------------------------------------------
 Version 1.2.3d 22/6/2014
-Removed output of Warnings when debug is disabled (no -d), modify pipresents.py line 75 ish if you wish to see warnings
-Now reports minor version e.g. 1.2.3d in debug output.
-hyperlinkshow - Improvements and bug fixes
-Use updated example for demonstration
- - new repeat command to allow video and audio tracks to repeat
- - fixed goto so that it forgets the path
- - improved debugging trace. Now enabled from pp_hyperlinkshow.py
- 
-Radiobuttonshow - bug fixes
- - removed code that merged links from the first track, all links should be in the show.
-
-omxdriver.py - replace kill with SIGINT so so it has a chance to tidy up daemons and omxplayer.bin
-Improvements to manual
-
-Version 1.2.3c 4/1/2104
-hopefully fixed unreliable video playing
-additional checks in pp_omxdriver.py and pp_videoplayer.py for the incorrect termination of omxplayer
-at the end of a track. One in a thousand times or so it does not send 'have a nice day' or terminate itself.
-The code now detects these, ends the track, and kills omxplayer; some orphan dbus-daemons are left.
-Occurences are reported to the terminal and in pp_log.log event though the -d option is not set.
+If you want an example of the repeat command in a hyperlinkshow download pp_hyperlinkshow_1p2 example profile
 
 Version 1.2.3b 28/11/2013
-bug correction release:
-fixed - liveshow now works with -l option
-fixed - pp_menu_1p2 example profile updated
-fixed - manual updated to change warped to warp in the various Window fields
-
-1.2.3 16/11/2013
-
-new - browser player to play web tracks stored locally or on the internet
-new - menushow has many new menu layouts with icons and bullets
-new - much improved scaling of images in ImagePlayer
-new - plugins (user provided python modules) allow dynamic content to modify images or to be written to the display
-
-enhancement - video window, image window and web window now use the same terminology
-enhancement -  menus can now have a background colour
-enhancement - hint positioning in mediashow and liveshow now more flexible
-enhancement - hint positioning in menu now more flexible
-enhancement - liveshow can now include web tracks
-enhancement - all track types now have the same set of ancillaries:
-   message player has track text
-   message player has show text
-enhancement - ability to inhibit display of show text and show background in individual tracks
-   all players have display show text
-   all players have display show background
-enhancement - changed titles from mplayer to Audio Player Options, Audio Player Audio, Audio Player Speaker, Audio Player Volume,
-    to allow audio players other than mplayer on other platforms
-enhancement - changed titles from OMXPlayer to Video Player Options Video Player Audio, Video Window, Video Player Volume,
-    to allow video players other than OMXplayer on other platforms
-enhancement - includes desktop files for examples.sh and pp_editor.py
-
-fixed - duration of Message Track set to '' in new_tracks
-fixed - track text now has font chooser
+bug correction release
+liveshow now works with -l option
+pp_menu_1p2 example profile updated. No need to download just run editor on it with --forceupdate then correct the xxx window errors
+manual updated to change warped to warp in the various Window fields
 
 
-1.2.2b 17/09/2013
-enhancement - non-fullscreen mode works much better, see manual for size adjustment.
-enhancements to editor - tabs, font chooser, colour chooser, location browser
-enhancements to editor - copy show, new show creates a medialist.
-enhancement - validation has caught up
-fixed - cancelling out of creating a new profile does not create profile 'None'
-tested with latest image 2013-09-10
+Version 1.2.3 17/11/2013
 
+uzbl needs to be installed -  sudo apt-get update sudo apt-get install uzbl
 
-1.2.2 18/8/2013
-PLEASE READ RELEASE NOTES
-new - hyperlinkshow for touchscreen type shows in museums
-new - radiobuttonshow for kiosks with buttons
-new - input subsystem has been completely redesigned to facilitate the addition of new input device drivers.
-new - control track has been removed. Show Control is now available in all track types
-new - Audio tracks can now have zero duration to allow them to be used solely for animation and show control.
-enhancement - omxplayer now plays videos in a window
-enhancement - imageplayer images can be scaled to fit in a window
-enhancement - messageplayer, position of text can now be specified
-enhancement - all track types now have background colour, background images, show text, track text, and animation control
-enhancement - track and show text can now be multi-line
-enhancement - liveshows now have windows for images and videos, background images, and show text which can be applied to dynamic content.
-enhancement - shutdown the Pi or exit Pi Presents using Show Control
-enhancement - run-time controls  such as volume control for OMXPlayer and MPlayer
-enhancement - configuraton files xxx.cfg can now be in a profile or pp_home.
-enhancement - GPIO inputs can trigger events on both edges and repeatedly when in a state, fields of gpio.cfg have been modified as a consequence.
-enhancement - CTRL-BREAK can be reconfigured to another key.
-enhancement  - more/different messages in resources.cfg
-fixed - shutdown from gpio button now works again :-(
-fixed - in menus the timeout is cancelled by Up, Down etc.
+There has been a change of profile since 1.2.2. However I have not changed the profile major version number since this is a beta. You must update the profiles by force; to do this run the editor with the --forceupdate command line option.
 
+To ease the updating task there is an editor menu option 'tools>update'  which will update all profiles in a pp_home.
 
-1.2.1d 14/5/2013
-PLEASE READ RELEASE NOTES
-new - facilities to control one concurrent show from another
-    control track
-	run-once repeat option in mediashow
-fixed - editor does not crash if a track is created when a medilist is not selected
-fixed - menu background is now always black
+Play safe, keep backups!
 
+In addition the following will need to be changed:
 
-1.2.1c 27/4/2013
-PLEASE READ RELEASE NOTES
-new - messageplayer now has a justify field to justify the text.
-new - in the editor use tools>update all to update all profiles in pp_home
-new - new editor command line option --forceupdate to force updating a profile if editor and profile versions are the same (useful for beta testers).
-enhancement - increase number of lines and font size in the editor's text field
-enhancement - add .wma to audio types
+The format of Image Window has changed to allow 4 resizing options.
+You will need to edit the Image Window field of every show and any image tracks as follows:
+   centred > original
+   1 2 > original 1 2
+   1 2 3 4 > shrink 1234   You may prefer fit or warp to shrink (see manual)
 
-fixed - shutdown using a button now works again
-fixed - playing an audio track does not reset backgound colour to black
+The format of Video Window (was OMX window) has changed to match Image Window and to allow 4 resizing options in future.
+You will need to edit the Video Window field in every show and any video tracks 
+   centred > original
+   1 2 > original 1 2
+   1 2 3 4 > warp 1 2 3 4
+
+The menushow parameters have changed significantly to accomodate the much enhanced menu displays.
+The best way to convert from an old menushow to the new is to delete the old show
+and replace it with a new one by doing show>new>menu in the editor. Details:
+  - Remember the Show Reference of the old menu and the file name of its Medialist.
+  - Delete the menu show but not its medialist
+  - Create a new menu and give it the same show reference as the old when it is being created.
+  - You may get a message saying the medialist already exists, just click OK
+  - Edit the Medialist field in the new menu to be the old medialist name.
+  - If the old menu and its medialist had different names you may now have an additional EMPTY medialst
+    with the name of the menu. You can delete it.
+You should then have a menu looking a bit like the old except it has bullets. Now read the menu to improve it.
+The pp_menu_1p2 example shows what can be achieved.
+The new menu has the menu background disabled by default.
+
+In Track Defaults in mediashows and menus and in the menu itself the Hint Text Y position
+is noo wrt to the top of the screen rather than the bottom. There is also a Hont Text x position.
+   
+There are new examples, additional media and the changes above made to the examples. Best to re-download  the [pipresents-next-examples].
 
 
 
-Version 1.2.1 beta 1 8/4/2013
-Major improvements:
-
-AUDIO PLAYER
-New audioplayer which will play audio tracks without affecting the display, uses MPlayer
-Audio tracks can be sent to left or right speakers or stereo.
-Audio tracks can have associate images and text.
-Volume of a track can be set.
-
-ANIMATION and GPIO
-New animation subsystem, turn GPIO on or off synchronised with tracks
-GPIO is now fully configurable, assign pins to buttons, trigger inputs or animation outputs
-
-TIME OF DAY TRIGGERS
-Time of day triggers for liveshow and mediashow, start a show at a time of day, end a show after a period of time or at a time of day.
-When waiting for time of day can display the time of the next show.
-
-CONCURRENCY
-Can now play two or more shows simultaneously
-Control keys and buttons can be disabled for chosen shows.
-
-MESSAGES
-Messages can now have background images or text.
-
-FULL SCREEN
-Simplified setup and use of fullscreen - thanks tjaehnel
-
-SHUFFLE
-Tracks in mediashow and liveshow can now be shuffled
-
-VIDEOPLAYER
-Provision in the editor for seamless looping (waiting for omxplayer to be upgraded)
-Provision in editor for windowed videos (waiting for omxplayer to be upgraded)
-Added .m4v to video types
-Volume of a track can now be set
-
-MEDIASHOW
-Enhanced triggering - moving to the next track can now be triggered by GPIO
-
-BUG FIXES
-As version 1.1.2b
-Improved implementation of possible fix for playing of videos crashing once in every few hours
-
-version 1.1.2b - 7/4/2013
-Fixed messages not being vertically centered in messageplayer
-Fixed duration of displayed messages increasing, as well as increasing CPU occupancy with time
-Possible  fix for playing of videos crashing once in every few hours
-
-version 1.1.2a - 19/2/2013
-Fixed sorting of files in liveshow
-
-version 1.1.2 - 12/2/2013
-Liveshow can now take its tracks from two directories
-Switched 'up' and 'down' cursor keys in mediashow to match other programs.
-Corrected response to buttons especially in complex shows
-in show error handling now exits cleanly.
-Examples always use hdmi for audio
-
-version 1.1.1b - 31/1/2013
-Workaround for editor not reliably saving medialists when used on a Windows PC
-
-version 1.1.1a - 28/1/2013
-Fixed bug in Track> Add Dir
-!!!! Editor does not reliably save medialists when used on a Windows PC !!!!!
-
-Version 1.1.1 - 28/1/2013
-Added a LiveShow capability, tracks can be dynamically uploaded using ftp while a show is running.
-Editor now works on a PC.
-Added resources.cfg that allows the administrative text that was displayed to customers to be modified.
-Removed the -c command line argument as Pi Presents automatically detects where its code is.
-Removed mouse pointer in fullscreen mode, requires unclutter to be installed (Thanks Azizar)
-Added .wav and .ogg to audio files as they can be played by omxplayer.
 
 
-Version 1.1.0 - 20/1/2013
-Added validation of profiles - all fields except for fonts and colours are validated.
-Added a system to check compatibiity between profiles, editor and Pi Presents. Uses first 2 digits of Version:
-   First digit - complete re-write.
-   Second digit - Incremented when profile definition has changed
-   Third digit - modifications that do not change the profile interface.
-Images can now display a text overlay - show-text and track-text
-Images can  be paused using 'space', 'p' or spacebar
-Reversed the polarity of PIR input as burglar alarm PIR's have nc connections.
-New image and message tracks now have blank durations so they inherit from show by default.
-Fixed bug in editor where add show and add track produced linked tracks.
-Other minor improvements
 
-Version 1.0 - 8/1/2013
-First Issue
+
+Version 1.2.2a (beta)
+
+There has been a change of profile since 1.2.1d. However I have not changed the profile major version number since this is a beta. You must update the profiles by force; to do this run the editor with the --forceupdate command line option.
+
+To ease the updating task there is a now an editor menu option 'tools>update'  which will update all profiles in a pp_home.
+
+Play safe, keep backups!
+
+In addition the following will need to be changed:
+
+Audio Tracks - change Duration from 0 to <blank>. Zero now means zero duration; <blank> will allow the track to run to completion. Other values of Duration can be used, see the manual.
+
+Mediashows - change the Trigger for Start field to match the new input binding system:
+* To trigger off the Return or Down cursor keys:
+    Trigger For Start -> input or input-quiet Start Trigger-> <blank>
+* To trigger off a GPIO button:
+    Trigger For Start -> input or input-quiet Start Trigger-> pp-play (symbolic name bound to P1-18)
+* To trigger off a PIR:
+    Trigger For Start -> input or input-quiet Start Trigger-> PIR (bound to P1-11)	
+PIR and pp-play are now symbolic names not internal operations.
+
+All Shows - Users of earlier versions of [pipresents-next] will need to update OMX Window  from <blank> to centred.
+
+Mediashows - change the Trigger For Next field:
+* Change from none to continue (just a tidy up of the meaning, operation is the same).
+* Change from GPIO to input and change the Next Input field to be a symbolic name.
+
+Control Tracks - These have been removed. All other track types now have Show Control fields  at Beginning and End of the track.
+
+gpio.cfg - the format has been modified. Any edits you have made to previous gpio.cfg will need to be made to copies of the new file. Also all operations such as play, stop have been changed to symbolic names e.g. pp-play, pp-stop to accomodate the redesigned input event binding system, do not change these back.
+
+resources.cfg - new messages have been added and the text improved. Some of the mediashowmesages have been reorgaanised.
+
+
+Version 1.2.1d (beta)
+
+There has been a change of profile since 1.2.1c I have added a number of new fields and a new type of track. However I have not changed the profile version number since this is a beta. You must update the profiles; to do this run the editor with the --forceupdate command line option.
+
+To ease the updating task there is a now editor menu option 'tools>update'  which will update all profiles in a pp_home.
+
+Version 1.2.1
+MPlayer must now be installed before using Pi Presents - sudo apt-get install mplayer
+
+This version has many new fields so the version number has increased from 1.1 to 1.2
+* This version of Pi Presents will not run shows prepared under previous versions of pp_editor
+* Using the editor on a previous version of a profile will automatically upgrade the profile to the current version HOWEVER SEE BELOW!!!
+* There is one change you might have to do manually. If you used PIR as the trigger for a mediashow change the 'Start Trigger' field to GPIO and enter PIR into the 'trigger input' field.
+
+There is a simplified way to do fullscreen so the --fullscreen (-f) command option now has no parameters. Also there is no need to edit the lxde-rc.xml file or change the taskbar to autohide. However if lxde-rc.xml is already edited just leave it it will not affect operation.
+
+The Version 1.1.x examples use omxplayer to play audio tracks. MPlayer can now be used. To do this in this beta you will need to delete the track and re-create it.
+
+In version 1.1.x at the end of a mediashow the screen went blank, this does not happen in version 1.2.1 as, in order to reduce the flicker between tracks I leave the previous track on display while displaying the next. You will need to add a 1 second blank message track if you want a blank screen. 
+
+This and future versions can potentially blow up your Pi as it controls the digital outputs. Until you are familiar with it I suggest ensuring all GPIO pins are disconnected when using Pi Presents.
+
+Take care when modifying gpio.cfg,  little error checking is done by Pi Presents
+
+Enjoy, feedback welcome.
+
+
+Version 1.1.2
+On a Windows PC the editor did not reliably save medialists. I have added a workaround which asks the user to re-try  the save it seems to always work on the second or third time.
+
+unclutter must be installed before using Pi Presents  (sudo apt-get install unclutter)
+
+In my tests liveshow coped well with deleting tracks at any time. However I can see there are potential problems as files could be deleted at the moment they are being read. If you have problems please report them and I will improve the mutual exclusion.
+
+Take care when modifying resources.cfg, little error checking is done by Pi Presents.

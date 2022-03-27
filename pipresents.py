@@ -53,11 +53,12 @@ class PiPresents(object):
             return 1000*int(vitems[0])+100*int(vitems[1])+int(vitems[2])
 
 
+
     def __init__(self):
         # gc.set_debug(gc.DEBUG_UNCOLLECTABLE|gc.DEBUG_INSTANCES|gc.DEBUG_OBJECTS|gc.DEBUG_SAVEALL)
         gc.set_debug(gc.DEBUG_UNCOLLECTABLE|gc.DEBUG_SAVEALL)
-        self.pipresents_issue="1.4.5"
-        self.pipresents_minorissue = '1.4.5a'
+        self.pipresents_issue="1.4.6"
+        self.pipresents_minorissue = '1.4.6c'
 
         StopWatch.global_enable=False
         
@@ -81,7 +82,6 @@ class PiPresents(object):
                 tkinter.messagebox.showwarning("Pi Presents","Bad Application Directory")
             exit(102)
 
-        
         # Initialise logging and tracing
         
         # initlize VLCDriver logger
@@ -336,7 +336,8 @@ class PiPresents(object):
         self.reboot_required=False
         self.terminate_required=False
         self.exitpipresents_required=False
-        
+        self.restartpipresents_required=False
+                
         #initialise the Audio manager
         self.audiomanager=AudioManager()
         status,message=self.audiomanager.init(self.pp_dir)
@@ -448,7 +449,8 @@ class PiPresents(object):
             reason,message=self.show_manager.control_a_show(show_ref,'open')
             if reason == 'error':
                 self.mon.err(self,message)
-                self.end(reason,message)
+                self.terminate()
+                #self.end(reason,message)
 
 
 # *********************
@@ -463,6 +465,16 @@ class PiPresents(object):
         self.mon.log(self,"animate command received: "+ line)
         #osc sends output events as a string
         reason,message,delay,name,param_type,param_values=self.animate.parse_animate_fields(line)
+        if reason == 'error':
+            self.mon.err(self,message)
+            self.end(reason,message)
+        self.handle_output_event(name,param_type,param_values,0)
+
+    def show_control_handle_animate(self,line):
+        self.mon.log(self,"animate show control command received: "+ line)
+        line = '0 ' + line
+        reason,message,delay,name,param_type,param_values=self.animate.parse_animate_fields(line)
+        # print (reason,message,delay,name,param_type,param_values)
         if reason == 'error':
             self.mon.err(self,message)
             self.end(reason,message)
@@ -501,6 +513,15 @@ class PiPresents(object):
                 self.root.after(1,self.e_all_shows_ended_callback)
                 return
             reason,message= self.show_manager.exit_all_shows()
+            
+        elif symbol == 'pp-restartpipresents':
+            self.restartpipresents_required=True
+            if self.show_manager.all_shows_exited() is True:
+                # need root.after to grt out of st thread
+                self.root.after(1,self.e_all_shows_ended_callback)
+                return
+            reason,message= self.show_manager.exit_all_shows()
+            
         else:
             # pass the input event to all registered shows
             for show in self.show_manager.shows:
@@ -569,6 +590,18 @@ class PiPresents(object):
                 return
             return
 
+        if fields[0] =='cec':
+            status,message=self.handle_cec_command(fields[1:])
+            if status == 'error':
+                self.mon.err(self,message)
+                self.end('error',message)
+                return
+            return
+            
+        if fields[0] =='animate':
+            self.show_control_handle_animate(' '.join(fields[1:]))
+            return
+
                 
         # show commands
         show_command=fields[0]
@@ -576,6 +609,7 @@ class PiPresents(object):
             show_ref=fields[1]
         else:
             show_ref=''
+            
         if show_command in ('open','close','closeall','openexclusive'):
             self.mon.sched(self, TimeOfDay.now,command_text + ' received from show:'+show)
             if self.shutdown_required is False and self.terminate_required is False:
@@ -583,11 +617,6 @@ class PiPresents(object):
             else:
                 return
             
-
-        elif show_command =='cec':
-            self.handle_cec_command(show_ref)
-            return
-        
         elif show_command == 'event':
             self.handle_input_event(show_ref,'Show Control')
             return
@@ -617,18 +646,49 @@ class PiPresents(object):
             
         if reason=='error':
             self.mon.err(self,message)
+            self.end('error',message)
+            return
         return
 
 
 
-    def handle_cec_command(self,command):
-        if command == 'on':
-            os.system('echo "on 0" | cec-client -s')
-        elif command == 'standby':
-            os.system('echo "standby 0" | cec-client -s')
+    def handle_cec_command(self,args):
+        if len(args)==0:
+            return 'error','no arguments for CEC command'
+            
+        if len(args)==1:
+            device='0'
+            if args[0] == 'scan':
+                com = 'echo scan | cec-client -s -d 1'
+                #print (com)
+                os.system(com)
+                return 'normal',''
+                
+            if args[0] == 'as':
+                com = 'echo as | cec-client -s -d 1'
+                #print (com)
+                os.system(com)
+                return 'normal',''
+            
+        if len(args)==2:
+            device = args[1]
+            if not device.isdigit():
+                return 'error', 'device is not a positive integer'
+        
+        if args[0] == 'on':
+            com= 'echo "on '+ device +'" | cec-client -s -d 1'
+            #print (com)
+            os.system(com)
+            return 'normal',''            
+        elif args[0] == 'standby':
+            com= 'echo "standby '+ device +'" | cec-client -s -d 1'
+            #print (com)
+            os.system(com)
+            return 'normal',''
+        else:
+            return 'error', 'Unknown CEC command: '+ args[0]
 
-        elif command == 'scan':
-            os.system('echo scan | cec-client -s -d 1')
+
                       
     # deal with differnt commands/input events
 
@@ -689,7 +749,7 @@ class PiPresents(object):
             if status != 'normal':
                 continue
             canvas_obj.config(bg=self.starter_show['background-colour'])
-        if reason in ('killed','error') or self.shutdown_required is True or self.exitpipresents_required is True or self.reboot_required is True:
+        if reason in ('killed','error') or self.shutdown_required is True or self.exitpipresents_required is True or self.reboot_required is True or self.restartpipresents_required is True:
             self.end(reason,message)
 
     def end(self,reason,message):
@@ -697,6 +757,7 @@ class PiPresents(object):
         if self.root is not None:
             self.root.destroy()
         self.tidy_up()
+        
         if reason == 'killed':
             if self.email_enabled is True and self.mailer.email_on_terminate is True:
                 subject= '[Pi Presents] ' + self.unit + ': PP Exited with reason: Terminated'
@@ -710,6 +771,7 @@ class PiPresents(object):
             #print('Uncollectable Garbage',gc.collect())
             # objgraph.show_backrefs(objgraph.by_type('Canvas'),filename='backrefs.png')
             sys.exit(101)
+            
                           
         elif reason == 'error':
             if self.email_enabled is True and self.mailer.email_on_error is True:
@@ -730,6 +792,10 @@ class PiPresents(object):
             
             # close logging files 
             self.mon.finish()
+            if self.restartpipresents_required is True:
+                #print ('restart')
+                return
+                
             if self.reboot_required is True:
                 # print 'REBOOT'
                 call (['sudo','reboot'])
@@ -738,6 +804,7 @@ class PiPresents(object):
                 call (['sudo','shutdown','now','SHUTTING DOWN'])
             #print('uncollectable garbage',gc.collect())
             sys.exit(100)
+
 
 
     # tidy up all the peripheral bits of Pi Presents
@@ -887,8 +954,6 @@ if __name__ == '__main__':
         exit()
 
     pp = PiPresents()
-
-
-
-
-
+    print ('Pi Presents is restarting')
+    del(pp)
+    os.execv(__file__, sys.argv)
