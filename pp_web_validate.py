@@ -1636,4 +1636,4 @@ class Validator(AdaptableDialog):
                 self.display('f','Fields of  '+ name + ' are out of range: ' + item)
             else:
                 self.display('w','Seconds or Minutes is greater then 59 in '+ name + ': ' + item)          
-            return
+            return    
