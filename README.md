@@ -1,4 +1,4 @@
-PI PRESENTS  - Version 1.4.4
+PI PRESENTS  - Version 1.4.6
 ============================
 
 This repository contains an unofficial and independent fork of Pi Presents as found here https://github.com/KenT2/pipresents-beep/
