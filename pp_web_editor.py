@@ -37,7 +37,7 @@ class PPWebEditor(App):
         # ***************************************
         # INIT
         # ***************************************
-        self.editor_issue="1.4.5"
+        self.editor_issue="1.4.6"
         self.force_update= False
 
         # get directory holding the code
@@ -1598,5 +1598,3 @@ if __name__  ==  "__main__":
           multiple_instance=True,enable_file_cache=False, debug=False,
           update_interval=0.3, start_browser=start_browser)
         exit()
-
-
